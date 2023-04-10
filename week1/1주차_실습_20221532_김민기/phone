@@ -1,0 +1,9 @@
+#! /bin/sh
+
+if [ $# -lt 1 ]; then 
+        echo "Usage: phone searchfor [...searchfor]"
+        echo "(You didn't tell me what you want to search for.)"
+        exit 0
+fi
+arg=`echo $* | sed 's/ /|/g'`
+egrep $arg mydata | awk -f display.awk
