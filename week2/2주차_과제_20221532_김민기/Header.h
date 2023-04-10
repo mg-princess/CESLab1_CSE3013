@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 
 void count(int N, int list[]);
