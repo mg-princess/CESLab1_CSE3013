@@ -295,7 +295,7 @@ void BlockDown(int sig){
 			gameOver = 1;
 		}
 		AddBlockToField(field, nextBlock[0], blockRotate, blockY, blockX);
-		score = DeleteLine(field);
+		score += DeleteLine(field);
 		PrintScore(score);
 		nextBlock[0] = nextBlock[1];
 		nextBlock[1] = rand()%7;
@@ -305,7 +305,7 @@ void BlockDown(int sig){
 		blockX=WIDTH/2-2;
 		DrawField();
 	}
-	alarm(1);
+	timeout = 0;
 }
 
 void AddBlockToField(char f[HEIGHT][WIDTH],int currentBlock,int blockRotate, int blockY, int blockX){
