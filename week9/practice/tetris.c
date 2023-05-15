@@ -211,6 +211,7 @@ void play(){
 	act.sa_handler = BlockDown;
 	sigaction(SIGALRM,&act,&oact);
 	InitTetris();
+	/*
 	do{
 		if(timed_out==0){
 			alarm(1);
@@ -228,6 +229,7 @@ void play(){
 			return;
 		}
 	}while(!gameOver);
+	*/
 	alarm(0);
 	getch();
 	DrawBox(HEIGHT/2-1,WIDTH/2-5,1,10);
@@ -415,14 +417,12 @@ void rank(){
 	printw("2. list ranks by a specific name\n");
 	printw("3. delete a specific rank\n");
 	int input = 0;
-	int X = 0, Y = 0; 
+	int X = 1, Y = userNum; 
 	input = wgetch(stdscr);
 	switch(input) {
 		case '1':
 			printw("X: "); scanw("%d", &X); X--;
 			printw("Y: "); scanw("%d", &Y); Y--;
-			if(X == -1) X = 0;
-			if(Y == -1) Y = userNum;
 			printw("      name     |   score\n");
 			printw("----------------------------\n");
 			if(X > Y || X*Y < 0){
@@ -466,7 +466,6 @@ void writeRankFile(){
 void newRank(int score){
 	Node *curNode = node->next, *newNode;
 	newNode = malloc(sizeof(*node));
-
 	clear();
 	char name[NAMELEN];
 	printw("your name: ");
@@ -482,12 +481,14 @@ void newRank(int score){
 	else {
 		while(curNode->next != NULL) {
 			if(curNode->next->score < score) {
-				newNode->next = curNode->next->next;
+				newNode->next = curNode->next;
 				curNode->next = newNode;
 				break;
 			}
 			curNode = curNode->next;
 		}
+		newNode->next = curNode->next;
+		curNode->next = newNode;
 	}
 	userNum++;
 	writeRankFile();

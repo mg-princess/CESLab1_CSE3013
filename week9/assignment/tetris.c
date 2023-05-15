@@ -415,15 +415,13 @@ void rank(){
 	printw("2. list ranks by a specific name\n");
 	printw("3. delete a specific rank\n");
 	int input = 0, count = 0, flag = 1;
-	int X = 0, Y = 0; 
+	int X = 1, Y = 5; 
 	Node *curNode = node->next;
 	input = wgetch(stdscr);
 	switch(input) {
 		case '1':
 			printw("X: "); scanw("%d", &X); X--;
 			printw("Y: "); scanw("%d", &Y); Y--;
-			if(X == -1) X = 0;
-			if(Y == -1) Y = userNum;
 			printw("      name     |   score\n");
 			printw("----------------------------\n");
 			if(X > Y || X*Y < 0){
@@ -442,7 +440,9 @@ void rank(){
 		case '2':
 			printw("input the name: ");
 			char name[NAMELEN];
+			echo();
 			scanw("%s", name);
+			noecho();
 			printw("      name     |   score\n");
 			printw("----------------------------\n");
 			
