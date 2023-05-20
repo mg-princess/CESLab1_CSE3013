@@ -4,7 +4,7 @@ static struct sigaction act, oact;
 
 int main(){
 	int exit=0;
-
+	node = NULL;
 	initscr();
 	noecho();
 	keypad(stdscr, TRUE);	
@@ -211,7 +211,7 @@ void play(){
 	act.sa_handler = BlockDown;
 	sigaction(SIGALRM,&act,&oact);
 	InitTetris();
-	/*
+	
 	do{
 		if(timed_out==0){
 			alarm(1);
@@ -229,7 +229,7 @@ void play(){
 			return;
 		}
 	}while(!gameOver);
-	*/
+	
 	alarm(0);
 	getch();
 	DrawBox(HEIGHT/2-1,WIDTH/2-5,1,10);
@@ -387,7 +387,7 @@ void createRankList(){
 	int i, userScore;
 	char name[NAMELEN];
 
-	file = fopen("rank.txt", "r+");
+	file = fopen("rank.txt", "a+");
 	fscanf(file, "%d", &userNum);
 	fgetc(file);
 	node = malloc(sizeof(*node));
@@ -421,8 +421,10 @@ void rank(){
 	input = wgetch(stdscr);
 	switch(input) {
 		case '1':
+			echo();
 			printw("X: "); scanw("%d", &X); X--;
 			printw("Y: "); scanw("%d", &Y); Y--;
+			noecho();
 			printw("      name     |   score\n");
 			printw("----------------------------\n");
 			if(X > Y || X*Y < 0){
@@ -469,7 +471,9 @@ void newRank(int score){
 	clear();
 	char name[NAMELEN];
 	printw("your name: ");
+	echo();
 	scanw("%s", name);
+	noecho();
 	strncpy(newNode->name, name, NAMELEN);
 	newNode->name[NAMELEN-1] = '\0';
 	newNode->score = score;
@@ -487,8 +491,10 @@ void newRank(int score){
 			}
 			curNode = curNode->next;
 		}
-		newNode->next = curNode->next;
-		curNode->next = newNode;
+		if(curNode->next == NULL) {
+			newNode->next = curNode->next;
+			curNode->next = newNode;
+		}
 	}
 	userNum++;
 	writeRankFile();

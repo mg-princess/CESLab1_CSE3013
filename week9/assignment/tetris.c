@@ -385,7 +385,7 @@ void createRankList(){
 	int i, userScore;
 	char name[NAMELEN];
 
-	file = fopen("rank.txt", "r+");
+	file = fopen("rank.txt", "a+");
 	fscanf(file, "%d", &userNum);
 	fgetc(file);
 	node = malloc(sizeof(*node));
@@ -420,8 +420,10 @@ void rank(){
 	input = wgetch(stdscr);
 	switch(input) {
 		case '1':
+			echo();
 			printw("X: "); scanw("%d", &X); X--;
 			printw("Y: "); scanw("%d", &Y); Y--;
+			noecho();
 			printw("      name     |   score\n");
 			printw("----------------------------\n");
 			if(X > Y || X*Y < 0){
@@ -504,11 +506,12 @@ void writeRankFile(){
 void newRank(int score){
 	Node *curNode = node->next, *newNode;
 	newNode = malloc(sizeof(*node));
-
 	clear();
 	char name[NAMELEN];
 	printw("your name: ");
+	echo();
 	scanw("%s", name);
+	noecho();
 	strncpy(newNode->name, name, NAMELEN);
 	newNode->name[NAMELEN-1] = '\0';
 	newNode->score = score;
@@ -520,11 +523,15 @@ void newRank(int score){
 	else {
 		while(curNode->next != NULL) {
 			if(curNode->next->score < score) {
-				newNode->next = curNode->next->next;
+				newNode->next = curNode->next;
 				curNode->next = newNode;
 				break;
 			}
 			curNode = curNode->next;
+		}
+		if(curNode->next == NULL) {
+			newNode->next = curNode->next;
+			curNode->next = newNode;
 		}
 	}
 	userNum++;
